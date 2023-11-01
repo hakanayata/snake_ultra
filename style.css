@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Jura', sans-serif;
+    background-color: #001;
+    text-align: center;
+}
+
+main {
+    background-color: #054;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #001;
+    padding: 1rem;
+}
+
+h1 {
+    color: #eef;
+    letter-spacing: 5px;
+}
+
+#statsDiv {
+    width: 480px;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: #dfd;
+}
+
+#boardDiv {
+    height: 480px;
+    width: 480px;
+    position: relative;
+    background-color: #113;
+}
+
+#playBtn {
+    cursor: pointer;
+    width: 96px;
+    height: 36px;
+    background-color: #111;
+    border: 1px solid #afaa;
+    border-radius: 5px;
+    color: #afa;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+}
+
+#playBtn:hover {
+    opacity: .9;
+}
+
+#speedSpan {
+    width: 150px;
+}
+
+#speed {
+    margin-left: 1.1rem;
+}
+
+#scoreSpan {
+    width: 150px;
+}
+
+#score {
+    margin-left: 1.1rem;
+}
+
+#highestScoreSpan {
+    width: 150px;
+}
+
+#highestScore {
+    margin-left: 1.1rem;
+}
+
+#info {
+    margin: 1rem 0;
+    color: yellow;
+}

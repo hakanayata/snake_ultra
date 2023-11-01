@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Snake Ultra</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Jura:wght@500;700&display=swap"
+            rel="stylesheet"
+        />
+        <script src="./snake.js" defer></script>
+    </head>
+    <body>
+        <header>
+            <h1>🐍 Snake Ultra 🐍</h1>
+        </header>
+        <main>
+            <div id="statsDiv">
+                <span id="speedSpan">
+                    💨 <span id="speed">0</span
+                    ><span style="font-size: small; margin-left: 5px"
+                        >sq/s</span
+                    ></span
+                >
+                <span id="scoreSpan">🍎 <span id="score">000</span></span>
+                <span id="highestScoreSpan"
+                    >🏆 <span id="highestScore">000</span></span
+                >
+            </div>
+            <div id="boardDiv"></div>
+            <p id="info">Press the "Space" key on your keyboard to start</p>
+        </main>
+    </body>
+</html>
