@@ -4,6 +4,7 @@ const statsDiv = document.getElementById("statsDiv")
 const playBtn = document.getElementById("playBtn")
 const infoPar = document.getElementById("info")
 let snakeHead = null;
+let food = null;
 
 // constants
 const SQUARE_SIZE_PX = 24
@@ -23,18 +24,17 @@ let direction = "RIGHT"
 const createSnake = () => {
     for (let i = 0; i < snakeLength; i++) {
         const segment = document.createElement("div")
-        if (i === 0) {
-            segment.style.borderRadius = "0 50% 50% 0"
-        }
         segment.style.width = `${SQUARE_SIZE_PX}px`
         segment.style.height = `${SQUARE_SIZE_PX}px`
         segment.style.position = "absolute"
         segment.style.left = (headPos[0] - i * SQUARE_SIZE_PX) + "px"
         segment.style.top = headPos[1] + "px"
         segment.style.backgroundColor = "#6c6"
+        if (i === 0) {
+            // segment.style.borderRadius = "0 50% 50% 0"
+        }
         boardDiv.appendChild(segment)
         snakeSegments.push(segment)
-        console.log(snakeSegments);
     }
     snakeHead = snakeSegments[0]
 
@@ -43,7 +43,7 @@ const createSnake = () => {
 const createFood = () => {
     const [x, y] = getRandomAxes()
     console.log("food axes:", x, y);
-    const food = document.createElement("div")
+    food = document.createElement("div")
     food.style.height = `${SQUARE_SIZE_PX}px`
     food.style.width = `${SQUARE_SIZE_PX}px`
     food.style.position = "absolute"
@@ -71,7 +71,7 @@ const getSnakesCoordinates = () => {
     return currSnakesCoordinates
 }
 const startGame = () => {
-    gameLoop = setInterval(moveSnake, 200)
+    gameLoop = setInterval(moveSnake, 100)
 }
 const stopGame = () => {
     clearInterval(gameLoop)
@@ -103,9 +103,6 @@ document.addEventListener("keydown", (e) => {
     }
 })
 
-
-
-
 // Snake's navigation
 document.addEventListener("keydown", (e) => {
     if (!isPlaying) return
@@ -124,6 +121,9 @@ document.addEventListener("keydown", (e) => {
 })
 
 const moveSnake = () => {
+
+    // ? fix or not fix the problem (feature) where holding a key pressed causes change in speed
+
     // remove tail (last segment)
     const tail = snakeSegments.pop()
     boardDiv.removeChild(tail)
@@ -149,7 +149,7 @@ const moveSnake = () => {
     newHead.style.left = newHeadX + "px"
     newHead.style.top = newHeadY + "px"
     newHead.style.backgroundColor = "#6c6"
-    newHead.style.borderRadius = "0 50% 50% 0"
+    // newHead.style.borderRadius = "0 50% 50% 0"
     boardDiv.appendChild(newHead)
 
     // add the new head to the snake array
@@ -157,6 +157,30 @@ const moveSnake = () => {
 
     // update the snake's position
     headPos = [newHeadX, newHeadY]
+
+    // when snake's head and food overlaps
+    if (newHeadX === food.offsetLeft && newHeadY === food.offsetTop) {
+        // remove food
+        boardDiv.removeChild(food)
+        // increase snake's size
+        const belly = document.createElement("div")
+        belly.style.width = SQUARE_SIZE_PX + "px"
+        belly.style.height = SQUARE_SIZE_PX + "px"
+        belly.style.position = "absolute"
+
+        const lastSegment = snakeSegments[snakeSegments.length - 1]
+        const lastSegmentX = lastSegment.offsetLeft
+        const lastSegmentY = lastSegment.offsetTop
+
+        belly.style.left = lastSegmentX + "px"
+        belly.style.top = lastSegmentY + "px"
+        belly.style.backgroundColor = "#6c6"
+        boardDiv.appendChild(belly)
+        snakeSegments.push(belly)
+
+        createFood()
+    }
+
 
 }
 
