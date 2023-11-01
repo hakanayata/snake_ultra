@@ -42,7 +42,8 @@ const createSnake = () => {
 
 const createFood = () => {
     const [x, y] = getRandomAxes()
-    console.log("food axes:", x, y);
+    // console.log("food axes:", x, y);
+    // Todo: recreate the food if it overlaps with the snake
     food = document.createElement("div")
     food.style.height = `${SQUARE_SIZE_PX}px`
     food.style.width = `${SQUARE_SIZE_PX}px`
@@ -63,11 +64,10 @@ const getRandomAxes = () => {
     const randomAxes = [x, y]
     return randomAxes
 }
-// Todo: recreate the food if it overlaps with the snake
 const getSnakesCoordinates = () => {
     //
     const currSnakesCoordinates = [snakeHead.offsetLeft, snakeHead.offsetTop]
-    console.log("current head's axes", currSnakesCoordinates)
+    // console.log("current head's axes", currSnakesCoordinates)
     return currSnakesCoordinates
 }
 const startGame = () => {
