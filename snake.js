@@ -5,7 +5,7 @@ const playBtn = document.getElementById("playBtn")
 const infoPar = document.getElementById("info")
 const scoreSpan = document.getElementById("score")
 const highestScoreSpan = document.getElementById("highestScore")
-let snakeHead = null;
+// let snakeHead = null;
 let food = null;
 
 // constants
@@ -39,13 +39,22 @@ const createSnake = () => {
         boardDiv.appendChild(segment)
         snakeSegments.push(segment)
     }
-    snakeHead = snakeSegments[0]
+    // snakeHead = snakeSegments[0]
 
 }
 const createFood = () => {
     const [x, y] = getRandomAxes()
-    // console.log("food axes:", x, y);
-    // Todo: recreate the food if it overlaps with the snake
+    // Recreate the food if it overlaps with the snake
+    for (let i = 0; i < snakeSegments.length; i++) {
+        const segment = snakeSegments[i]
+        const segmentX = segment.offsetLeft
+        const segmentY = segment.offsetTop
+        if (segmentX === x && segmentY === y) {
+            console.log(segmentX, segmentY, "---", x, y);
+            createFood()
+            return
+        }
+    }
     food = document.createElement("div")
     food.style.height = `${SQUARE_SIZE_PX}px`
     food.style.width = `${SQUARE_SIZE_PX}px`
@@ -65,12 +74,12 @@ const getRandomAxes = () => {
     const randomAxes = [x, y]
     return randomAxes
 }
-const getSnakesCoordinates = () => {
-    //
-    const currSnakesCoordinates = [snakeHead.offsetLeft, snakeHead.offsetTop]
-    // console.log("current head's axes", currSnakesCoordinates)
-    return currSnakesCoordinates
-}
+// const getSnakesCoordinates = () => {
+//     //
+//     const currSnakesCoordinates = [snakeHead.offsetLeft, snakeHead.offsetTop]
+//     // console.log("current head's axes", currSnakesCoordinates)
+//     return currSnakesCoordinates
+// }
 const startGame = () => {
     gameLoop = setInterval(moveSnake, 100)
 }
@@ -86,7 +95,6 @@ const togglePlaying = () => {
     }
 }
 const gameOver = () => {
-    // stop game loop, show message
     pauseGame()
     isGameOver = true
     infoPar.textContent = "GAME IS OVER"
@@ -139,15 +147,13 @@ const startNewGame = () => {
 
 startNewGame()
 
-// listen for game start / stop
+// Listen for game start / stop
 document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
-        // if isGameOver => start new game
         if (isGameOver) {
             startNewGame()
             return
         }
-
         if (isPlaying) {
             pauseGame()
         } else {
@@ -177,13 +183,13 @@ document.addEventListener("keydown", (e) => {
 
 const moveSnake = () => {
 
-    // ? fix or not fix the problem (feature) where holding a key pressed causes change in speed
+    // ? Fix or not fix the problem (feature) where holding a key pressed causes change in speed
 
-    // remove tail (last segment)
+    // Remove tail (last segment)
     const tail = snakeSegments.pop()
     boardDiv.removeChild(tail)
 
-    // calculate new position
+    // Calculate new position
     let [newHeadX, newHeadY] = headPos
 
     if (direction === "LEFT") {
@@ -196,7 +202,7 @@ const moveSnake = () => {
         newHeadY += SQUARE_SIZE_PX
     }
 
-    // create a new head segment at new position 
+    // Create a new head segment at new position 
     const newHead = document.createElement("div")
     newHead.style.width = SQUARE_SIZE_PX + "px"
     newHead.style.height = SQUARE_SIZE_PX + "px"
@@ -207,17 +213,17 @@ const moveSnake = () => {
     // newHead.style.borderRadius = "0 50% 50% 0"
     boardDiv.appendChild(newHead)
 
-    // add the new head to the snake array
+    // Add the new head to the snake array
     snakeSegments.unshift(newHead)
 
-    // update the snake's position
+    // Update the snake's position
     headPos = [newHeadX, newHeadY]
 
-    // when snake's head and food overlaps
+    // When snake's head and food overlaps
     if (newHeadX === food.offsetLeft && newHeadY === food.offsetTop) {
-        // remove food
+        // Remove food
         boardDiv.removeChild(food)
-        // increase snake's size
+        // Increase snake's size
         const belly = document.createElement("div")
         belly.style.width = SQUARE_SIZE_PX + "px"
         belly.style.height = SQUARE_SIZE_PX + "px"
