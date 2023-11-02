@@ -33,8 +33,9 @@ const createSnake = () => {
         segment.style.left = (headPos[0] - i * SQUARE_SIZE_PX) + "px"
         segment.style.top = headPos[1] + "px"
         segment.style.backgroundColor = "#6c6"
+        segment.style.borderRadius = "20%"
         if (i === 0) {
-            // segment.style.borderRadius = "0 50% 50% 0"
+            segment.style.backgroundColor = "#bbc"
         }
         boardDiv.appendChild(segment)
         snakeSegments.push(segment)
@@ -50,7 +51,7 @@ const createFood = () => {
         const segmentX = segment.offsetLeft
         const segmentY = segment.offsetTop
         if (segmentX === x && segmentY === y) {
-            console.log(segmentX, segmentY, "---", x, y);
+            // console.log(segmentX, segmentY, "---", x, y);
             createFood()
             return
         }
@@ -126,7 +127,6 @@ const checkCollisions = () => {
         }
     }
 }
-
 
 const startNewGame = () => {
     snakeSegments = []
@@ -210,7 +210,7 @@ const moveSnake = () => {
     newHead.style.left = newHeadX + "px"
     newHead.style.top = newHeadY + "px"
     newHead.style.backgroundColor = "#6c6"
-    // newHead.style.borderRadius = "0 50% 50% 0"
+    newHead.style.borderRadius = "20%"
     boardDiv.appendChild(newHead)
 
     // Add the new head to the snake array
@@ -242,6 +242,17 @@ const moveSnake = () => {
         createFood()
         score++
         scoreSpan.textContent = score
+    }
+
+    // Format head segment while moving
+    for (let i = 0; i < snakeSegments.length; i++) {
+        if (i === 0) {
+            const headSegment = snakeSegments[i]
+            headSegment.style.backgroundColor = "#bbc"
+        } else {
+            const bodySegment = snakeSegments[i]
+            bodySegment.style.backgroundColor = "#6c6"
+        }
     }
 
     checkCollisions()
