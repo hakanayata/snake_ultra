@@ -3,6 +3,8 @@ const boardDiv = document.getElementById("boardDiv")
 const statsDiv = document.getElementById("statsDiv")
 const playBtn = document.getElementById("playBtn")
 const infoPar = document.getElementById("info")
+const scoreSpan = document.getElementById("score")
+const highestScoreSpan = document.getElementById("highestScore")
 let snakeHead = null;
 let food = null;
 
@@ -12,13 +14,14 @@ const BOARD_SIZE = 480
 const SQUARES_ON_EACH_DIRECTION = BOARD_SIZE / SQUARE_SIZE_PX
 
 // initial values
+let highestScore = localStorage.getItem("highestScore") || 0
 let isPlaying = false
+let isGameOver = null
 let snakeSegments = []
 let snakeLength = 3
 let initialSpeed = 1
 let headPos = [120, BOARD_SIZE / 2 - SQUARE_SIZE_PX]
 let score = 0
-let highestScore = 0
 let direction = "RIGHT"
 
 const createSnake = () => {
@@ -39,7 +42,6 @@ const createSnake = () => {
     snakeHead = snakeSegments[0]
 
 }
-
 const createFood = () => {
     const [x, y] = getRandomAxes()
     // console.log("food axes:", x, y);
@@ -57,7 +59,6 @@ const createFood = () => {
     food.textContent = "🍎"
     boardDiv.appendChild(food)
 }
-
 const getRandomAxes = () => {
     const x = Math.floor(Math.random() * SQUARES_ON_EACH_DIRECTION) * SQUARE_SIZE_PX
     const y = Math.floor(Math.random() * SQUARES_ON_EACH_DIRECTION) * SQUARE_SIZE_PX
@@ -73,39 +74,93 @@ const getSnakesCoordinates = () => {
 const startGame = () => {
     gameLoop = setInterval(moveSnake, 100)
 }
-const stopGame = () => {
+const pauseGame = () => {
     clearInterval(gameLoop)
 }
 const togglePlaying = () => {
+    if (isGameOver) return
     if (isPlaying) {
         isPlaying = false
     } else {
         isPlaying = true
     }
 }
+const gameOver = () => {
+    // stop game loop, show message
+    pauseGame()
+    isGameOver = true
+    infoPar.textContent = "GAME IS OVER"
+    if (score > highestScore) {
+        highestScoreSpan.textContent = score
+        localStorage.setItem("highestScore", score)
+    }
+}
 
-createSnake()
-createFood()
-getSnakesCoordinates()
+const checkCollisions = () => {
+    // Boundry collision
+    if (
+        headPos[0] < 0 ||
+        headPos[0] >= BOARD_SIZE ||
+        headPos[1] < 0 ||
+        headPos[1] >= BOARD_SIZE) {
+        gameOver()
+        return
+    }
+    // Self-collision
+    for (let i = 1; i < snakeSegments.length; i++) {
+        const segment = snakeSegments[i]
+        const segmentX = segment.offsetLeft
+        const segmentY = segment.offsetTop
 
+        if (headPos[0] === segmentX && headPos[1] === segmentY) {
+            gameOver()
+            return
+        }
+    }
+}
+
+
+const startNewGame = () => {
+    snakeSegments = []
+    headPos = [120, BOARD_SIZE / 2 - SQUARE_SIZE_PX]
+    isPlaying = false
+    isGameOver = false
+    score = 0
+    direction = "RIGHT"
+    highestScore = localStorage.getItem("highestScore")
+    boardDiv.innerHTML = ''
+    scoreSpan.textContent = score
+    highestScoreSpan.textContent = highestScore
+    infoPar.textContent = 'Press the "Space" key on your keyboard to start'
+
+    createSnake()
+    createFood()
+}
+
+startNewGame()
 
 // listen for game start / stop
 document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
+        // if isGameOver => start new game
+        if (isGameOver) {
+            startNewGame()
+            return
+        }
+
         if (isPlaying) {
-            stopGame()
+            pauseGame()
         } else {
             startGame()
         }
         togglePlaying()
         infoPar.textContent = `${isPlaying ? 'Game is ON' : 'PAUSED'}`
-        console.log("status: ", isPlaying);
     }
 })
 
 // Snake's navigation
 document.addEventListener("keydown", (e) => {
-    if (!isPlaying) return
+    if (!isPlaying || isGameOver) return
 
     if (e.code === "ArrowLeft" && direction !== "RIGHT") {
         direction = "LEFT"
@@ -179,12 +234,10 @@ const moveSnake = () => {
         snakeSegments.push(belly)
 
         createFood()
+        score++
+        scoreSpan.textContent = score
     }
 
+    checkCollisions()
 
 }
-
-
-// TODO: Check for collusions
-// 1. Walls
-// 2. Snake Body
