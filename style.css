@@ -19,7 +19,6 @@ main {
 
 header {
     background-color: #001;
-    padding: 1rem;
 }
 
 h1 {
@@ -37,26 +36,8 @@ h1 {
 }
 
 #boardDiv {
-    height: 480px;
-    width: 480px;
     position: relative;
-    background-color: #113;
-}
-
-#playBtn {
-    cursor: pointer;
-    width: 96px;
-    height: 36px;
-    background-color: #111;
-    border: 1px solid #afaa;
-    border-radius: 5px;
-    color: #afa;
-    font-size: 1.1rem;
-    margin: 1rem 0;
-}
-
-#playBtn:hover {
-    opacity: .9;
+    display: flex;
 }
 
 #speedSpan {
@@ -87,6 +68,46 @@ h1 {
     margin: 1rem 0;
     color: yellow;
 }
+
+#mobileNav {
+    display: flex;
+    justify-content: space-around;
+    width: 300px;
+    margin: 8px 0;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 60px;
+    font-size: 24px;
+    font-weight: bold;
+    outline: none;
+    border: 1px solid #afa;
+    border-style: solid;
+    border-radius: 50%;
+    /* background-color: #5cb85c; */
+    background-color: #0a418e;
+    color: white;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px 1px #ddd;
+}
+
+#arrowBtns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#arrow2ndRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 48px
+}
+
 
 a {
     text-decoration: none;
