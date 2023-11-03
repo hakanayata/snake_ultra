@@ -44,6 +44,7 @@ const createSnake = () => {
     // snakeHead = snakeSegments[0]
 
 }
+
 const createFood = () => {
     const [x, y] = getRandomAxes()
     // Recreate the food if it overlaps with the snake
@@ -70,18 +71,22 @@ const createFood = () => {
     food.textContent = "🍎"
     boardDiv.appendChild(food)
 }
+
 const getRandomAxes = () => {
     const x = Math.floor(Math.random() * SQUARES_ON_EACH_DIRECTION) * SQUARE_SIZE_PX
     const y = Math.floor(Math.random() * SQUARES_ON_EACH_DIRECTION) * SQUARE_SIZE_PX
     const randomAxes = [x, y]
     return randomAxes
 }
+
 const startGame = () => {
     gameLoop = setInterval(moveSnake, 1000 / sqps)
 }
+
 const pauseGame = () => {
     clearInterval(gameLoop)
 }
+
 const togglePlaying = () => {
     if (isGameOver) return
     if (isPlaying) {
@@ -90,6 +95,7 @@ const togglePlaying = () => {
         isPlaying = true
     }
 }
+
 const gameOver = () => {
     pauseGame()
     isGameOver = true
@@ -100,6 +106,7 @@ const gameOver = () => {
         localStorage.setItem("highestScore", score)
     }
 }
+
 const increaseSpeed = () => {
     sqps += 1 / 3
     speedSpan.textContent = sqps.toFixed(0)
@@ -136,11 +143,11 @@ const startNewGame = () => {
     score = 0
     direction = "RIGHT"
     highestScore = localStorage.getItem("highestScore")
-    boardDiv.innerHTML = ''
+    boardDiv.innerHTML = ""
     speedSpan.textContent = sqps
     scoreSpan.textContent = score
     highestScoreSpan.textContent = highestScore
-    infoPar.textContent = 'Press the "Space" key on your keyboard to start'
+    infoPar.textContent = 'Press "Space" key to start'
 
     createSnake()
     createFood()
@@ -161,7 +168,7 @@ document.addEventListener("keydown", (e) => {
             startGame()
         }
         togglePlaying()
-        infoPar.textContent = `${isPlaying ? 'Game is ON' : 'PAUSED'}`
+        infoPar.textContent = `${isPlaying ? 'Game is ON, use arrow keys to navigate' : 'PAUSED'}`
     }
 })
 
@@ -183,13 +190,7 @@ document.addEventListener("keydown", (e) => {
 })
 
 const moveSnake = () => {
-
-
     // ? Fix or not fix the problem (feature) where holding a key pressed causes change in speed
-
-    // Remove tail (last segment)
-    const tail = snakeSegments.pop()
-    boardDiv.removeChild(tail)
 
     // Calculate new position
     let [newHeadX, newHeadY] = headPos
@@ -203,6 +204,19 @@ const moveSnake = () => {
     } else if (direction === "DOWN") {
         newHeadY += SQUARE_SIZE_PX
     }
+
+    // Check if newHead is within the boundary
+    if (newHeadX < 0 ||
+        newHeadX >= BOARD_SIZE ||
+        newHeadY < 0 ||
+        newHeadY >= BOARD_SIZE) {
+        gameOver();
+        return
+    }
+
+    // Remove tail (last segment)
+    const tail = snakeSegments.pop()
+    boardDiv.removeChild(tail)
 
     // Create a new head segment at new position 
     const newHead = document.createElement("div")
