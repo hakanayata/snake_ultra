@@ -6,8 +6,6 @@ const infoPar = document.getElementById("info")
 const scoreSpan = document.getElementById("score")
 const highestScoreSpan = document.getElementById("highestScore")
 const speedSpan = document.getElementById("speed")
-// let snakeHead = null;
-let food = null;
 
 // constants
 const SQUARE_SIZE_PX = 24
@@ -17,6 +15,7 @@ const SQUARES_ON_EACH_DIRECTION = BOARD_SIZE / SQUARE_SIZE_PX
 // initial values
 let highestScore = localStorage.getItem("highestScore") || 0
 let isPlaying = false
+let food = null;
 let isGameOver = null
 let snakeSegments = []
 let snakeLength = 3
@@ -24,6 +23,7 @@ let sqps = 5
 let headPos = [120, BOARD_SIZE / 2 - SQUARE_SIZE_PX]
 let score = 0
 let direction = "RIGHT"
+// let snakeHead = null;
 
 const createSnake = () => {
     for (let i = 0; i < snakeLength; i++) {
@@ -142,7 +142,7 @@ const startNewGame = () => {
     isGameOver = false
     score = 0
     direction = "RIGHT"
-    highestScore = localStorage.getItem("highestScore")
+    highestScore = localStorage.getItem("highestScore") || 0
     boardDiv.innerHTML = ""
     speedSpan.textContent = sqps
     scoreSpan.textContent = score
