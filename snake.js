@@ -5,6 +5,7 @@ const playBtn = document.getElementById("playBtn")
 const infoPar = document.getElementById("info")
 const scoreSpan = document.getElementById("score")
 const highestScoreSpan = document.getElementById("highestScore")
+const speedSpan = document.getElementById("speed")
 // let snakeHead = null;
 let food = null;
 
@@ -19,7 +20,7 @@ let isPlaying = false
 let isGameOver = null
 let snakeSegments = []
 let snakeLength = 3
-let initialSpeed = 1
+let sqps = 5
 let headPos = [120, BOARD_SIZE / 2 - SQUARE_SIZE_PX]
 let score = 0
 let direction = "RIGHT"
@@ -75,14 +76,8 @@ const getRandomAxes = () => {
     const randomAxes = [x, y]
     return randomAxes
 }
-// const getSnakesCoordinates = () => {
-//     //
-//     const currSnakesCoordinates = [snakeHead.offsetLeft, snakeHead.offsetTop]
-//     // console.log("current head's axes", currSnakesCoordinates)
-//     return currSnakesCoordinates
-// }
 const startGame = () => {
-    gameLoop = setInterval(moveSnake, 100)
+    gameLoop = setInterval(moveSnake, 1000 / sqps)
 }
 const pauseGame = () => {
     clearInterval(gameLoop)
@@ -98,11 +93,16 @@ const togglePlaying = () => {
 const gameOver = () => {
     pauseGame()
     isGameOver = true
+    sqps = 5
     infoPar.textContent = "GAME IS OVER"
     if (score > highestScore) {
         highestScoreSpan.textContent = score
         localStorage.setItem("highestScore", score)
     }
+}
+const increaseSpeed = () => {
+    sqps += 1 / 3
+    speedSpan.textContent = sqps.toFixed(0)
 }
 
 const checkCollisions = () => {
@@ -137,6 +137,7 @@ const startNewGame = () => {
     direction = "RIGHT"
     highestScore = localStorage.getItem("highestScore")
     boardDiv.innerHTML = ''
+    speedSpan.textContent = sqps
     scoreSpan.textContent = score
     highestScoreSpan.textContent = highestScore
     infoPar.textContent = 'Press the "Space" key on your keyboard to start'
@@ -182,6 +183,7 @@ document.addEventListener("keydown", (e) => {
 })
 
 const moveSnake = () => {
+
 
     // ? Fix or not fix the problem (feature) where holding a key pressed causes change in speed
 
@@ -239,6 +241,9 @@ const moveSnake = () => {
         boardDiv.appendChild(belly)
         snakeSegments.push(belly)
 
+        pauseGame()
+        increaseSpeed()
+        startGame()
         createFood()
         score++
         scoreSpan.textContent = score
@@ -258,3 +263,10 @@ const moveSnake = () => {
     checkCollisions()
 
 }
+
+// const getSnakesCoordinates = () => {
+//     //
+//     const currSnakesCoordinates = [snakeHead.offsetLeft, snakeHead.offsetTop]
+//     // console.log("current head's axes", currSnakesCoordinates)
+//     return currSnakesCoordinates
+// }
